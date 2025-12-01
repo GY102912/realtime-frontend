@@ -18,7 +18,7 @@ export async function refreshAccessToken() {
     return refreshPromise;
 }
 
-// 🔥 axios 전용 메모리 저장소 — React와 절대 공유 안 함
+// axios 전용 메모리 저장소
 let accessToken = null;
 
 // 외부에서 로그인/초기화 시 토큰 설정하는 함수
@@ -36,7 +36,6 @@ export const axiosInstance = axios.create({
     withCredentials: true, // refresh 토큰 쿠키 자동 전송
 });
 
-// === REQUEST INTERCEPTOR ================================
 axiosInstance.interceptors.request.use(
     (config) => {
         if (accessToken) {
@@ -47,7 +46,6 @@ axiosInstance.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// === RESPONSE INTERCEPTOR ===============================
 axiosInstance.interceptors.response.use(
     (res) => res,
     async (error) => {
@@ -62,24 +60,16 @@ axiosInstance.interceptors.response.use(
 
         try {
             const refreshRes = refreshAccessToken();
-
             const newAccessToken = refreshRes.data.accessToken;
 
-            // 🔥 axiosInstance 전용 메모리 업데이트
             setAxiosAccessToken(newAccessToken);
 
-            // 🔥 실패했던 요청에 새로운 토큰 적용
             original.headers.Authorization = `Bearer ${newAccessToken}`;
-
-            // 🔥 재요청
             return axiosInstance(original);
 
         } catch (e) {
             console.error("토큰 재발급 실패:", e);
-
-            // 🔥 토큰 삭제 (로그아웃 유도)
             clearAxiosAccessToken();
-
             return Promise.reject(e);
         }
     }

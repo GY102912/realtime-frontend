@@ -33,17 +33,13 @@ export function AuthProvider({ children }) {
                     return;
                 }
 
-                // 🔥 새로고침 시 refreshToken으로 accessToken 재발급
                 const refreshRes = await refreshAccessToken();
                 const { accessToken } = refreshRes.data;
-
-                // 🔥 axiosInstance의 메모리에 accessToken 저장
-                setAxiosAccessToken(accessToken);
-
-                // 🔥 UI에도 accessToken을 넣음 (isAuthenticated 등)
                 setAccessToken(accessToken);
 
-                // 🔥 프로필도 불러오기 (선택)
+                // axiosInstance의 메모리에 accessToken 저장
+                setAxiosAccessToken(accessToken);
+
                 const profileRes = await getMyProfile();
                 setUser(profileRes.data);
 
