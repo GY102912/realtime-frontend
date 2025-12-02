@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPost } from "../../api/post";
-import { uploadProfileImage } from "../../api/user"
+import { usePostApi } from "../../api/usePostApi";
+import { useUserApi } from "../../api/useUserApi"
 
 export function useCreatePost() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const { createPost } = usePostApi();
+  const { uploadProfileImage } = useUserApi();
 
   const publishPost = async ({ title, content, images }) => {
     try {

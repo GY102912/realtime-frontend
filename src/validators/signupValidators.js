@@ -1,4 +1,4 @@
-import { checkEmailAvailability, checkNicknameAvailability } from "../api/user";
+import { useUserApi } from "../api/useUserApi";
 
 export const validateEmailFormat = (email) => {
     const regex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/;
@@ -16,11 +16,13 @@ export const validateNicknameFormat = (nickname) => {
 };
 
 export const validateEmailAvailability = async (email) => {
+    const { checkEmailAvailability } = useUserApi();
     const { isAvailable } = await checkEmailAvailability(email);
     return isAvailable;
 }
 
 export const validateNicknameAvailability = async (nickname) => {
+    const { checkNicknameAvailability } = useUserApi();
     const { isAvailable } = await checkNicknameAvailability(nickname);
     return isAvailable;
 }

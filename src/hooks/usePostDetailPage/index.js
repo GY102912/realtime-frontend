@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPostDetail, deletePost } from "../../api/post";
+import { usePostApi } from "../../api/usePostApi";
 import { useCommentList } from "../useCommentList";
 
 export function usePostDetailPage(postId) {
@@ -14,6 +14,8 @@ export function usePostDetailPage(postId) {
     handleDeleteComment,
     fetchMoreComments,
   } = useCommentList();
+
+  const { getPostDetail, deletePost } = usePostApi();
 
   useEffect(() => {
     async function fetchPost() {

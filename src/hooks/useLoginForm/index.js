@@ -1,25 +1,21 @@
 import useEmailField from "./useEmailField";
 import usePasswordField from "./usePasswordField";
-
-import { setAxiosAccessToken } from "../../api/axios";
-import { useAuth } from "../../context/AuthContext";
-import { login } from "../../api/auth";
+import { useAuthContext } from "../../context/AuthContext";
+import { useAuthApi } from "../../api/useAuthApi";
 
 export function useLoginForm(navigate) {
     const email = useEmailField();
     const password = usePasswordField();
 
-    const { setAccessToken } = useAuth();
+    const { applyAuth } = useAuthContext();
+    const { login } = useAuthApi();
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const res = await login(email.value, password.value);
-
-            const { accessToken } = res.data;
-            setAxiosAccessToken(accessToken);
-            setAccessToken(accessToken);
-
+            const loginRes = await login(email.value, password.value);
+            const accessToken = loginRes.data.accessToken;
+            applyAuth(accessToken, null);
             navigate("/boards/main");
 
         } catch(error) {

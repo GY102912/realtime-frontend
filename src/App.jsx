@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
+import { useAuthContext } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage"
 import BoardPage from "./pages/BoardPage"
@@ -8,7 +8,7 @@ import PostCreatePage from "./pages/PostCreatePage";
 import PostEditPage from "./pages/PostEditPage"
 
 function App() {
-  const { initialized } = useAuth();
+  const { initialized } = useAuthContext();
   if (!initialized) return null;
 
   return (

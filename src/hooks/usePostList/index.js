@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { getPosts } from "../../api/post";
+import { usePostApi } from "../../api/usePostApi";
 
 export function usePostList() {
     const [posts, setPosts] = useState([]);
     const [cursor, setCursor] = useState(null);
     const [more, setMore] = useState(true);
     const [loading, setLoading] = useState(false);
+
+    const { getPosts } = usePostApi();
 
     const loadPosts = async () => {
         if (!more || loading) return;

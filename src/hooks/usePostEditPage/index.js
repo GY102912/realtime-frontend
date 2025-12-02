@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPostDetail, updatePost } from "../../api/post";
-import { uploadProfileImage } from "../../api/user";
+import { usePostApi } from "../../api/usePostApi";
+import { useUserApi } from "../../api/useUserApi";
 
 export function usePostEditPage(postId) {
   const navigate = useNavigate();
 
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const { getPostDetail, updatePost } = usePostApi();
+  const { uploadProfileImage } = useUserApi();
 
   useEffect(() => {
     async function fetchPost() {
@@ -39,7 +42,7 @@ export function usePostEditPage(postId) {
 
     } catch (e) {
       console.error(e);
-      
+
     } finally {
       setLoading(false);
     }

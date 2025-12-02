@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { getComments, createComment, deleteComment } from "../../api/comment";
+import { useCommentApi } from "../../api/useCommentApi";
 
 export function useCommentList() {
     const [comments, setComments] = useState([]);
     const [cursor, setCursor] = useState(null);
     const [hasNext, setHasNext] = useState(true);
+
+    const { getComments, createComment, deleteComment } = useCommentApi();
 
     const handleCreateComment = async (postId, content) => {
         console.log(postId); console.log(content);

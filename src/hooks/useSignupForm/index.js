@@ -4,7 +4,7 @@ import usePasswordField from "./usePasswordField";
 import useConfirmPasswordField from "./useConfirmPasswordField";
 import useNicknameField from "./useNicknameField";
 
-import { signup, uploadProfileImage } from "../../api/user";
+import { useUserApi } from "../../api/useUserApi";
 
 export function useSignupForm(navigate) {
     const profile = useProfileField();
@@ -12,6 +12,8 @@ export function useSignupForm(navigate) {
     const password = usePasswordField();
     const confirmPassword = useConfirmPasswordField(password.value);
     const nickname = useNicknameField();
+
+    const { uploadProfileImage, signup } = useUserApi()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
