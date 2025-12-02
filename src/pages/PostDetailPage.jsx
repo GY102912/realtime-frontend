@@ -3,6 +3,7 @@ import { usePostDetailPage } from "../hooks/usePostDetailPage";
 import PostSection from "../components/post/PostSection";
 import CommentSection from "../components/post/CommentSection";
 import Modal from "../components/common/Modal";
+import SplashScreen from "../components/common/SplashScreen"
 
 export default function PostDetailPage() {
   const { postId } = useParams();
@@ -35,7 +36,7 @@ export default function PostDetailPage() {
     }
   : null;
 
-  if (!post) return <div>Loading...</div>;
+  if (!post) return <SplashScreen />;
 
   return (
     <main className="max-w-3xl mx-auto py-8 px-4">

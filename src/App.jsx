@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { useAuthContext } from "./context/AuthContext";
+import SplashScreen from "./components/common/SplashScreen";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage"
 import BoardPage from "./pages/BoardPage"
@@ -9,7 +10,7 @@ import PostEditPage from "./pages/PostEditPage"
 
 function App() {
   const { initialized } = useAuthContext();
-  if (!initialized) return null;
+  if (!initialized) return <SplashScreen />;
 
   return (
     <Routes>
