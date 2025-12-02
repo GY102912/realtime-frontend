@@ -95,14 +95,14 @@ export function AuthProvider({ children }) {
     // 페이지 새로고침 시 토큰 재발급
     useEffect(() => {
         async function init() {
-            if (!accessToken) {
-                setInitialized(true);
-                return;
-            }
-
             try {
-                const res = await privateAxios.get("/users/me");
-                const userProfile = res.data;
+                const reissueRes = await publicAxios.post("/tokens/reissue");
+                const newAccessToken = reissueRes.data.accessToken;
+                setAccessToken(newAccessToken);
+                tokenRef.current = newAccessToken;
+
+                const profileRes = await privateAxios.get("/users/me");
+                const userProfile = profileRes.data;
                 setUser(userProfile ?? null);
 
             } catch (refreshError) {
