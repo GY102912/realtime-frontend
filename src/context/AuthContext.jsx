@@ -25,6 +25,12 @@ export function AuthProvider({ children }) {
         tokenRef.current = accessToken;
     }, [accessToken]);
 
+    const resetAuthContext = async () => {
+        tokenRef.current = null; 
+        setAccessToken(null);
+        setUser(null);
+    };
+
     // 인증 요청을 위한 axios 인스턴스
     const privateAxios = useMemo(() => {
         const instance = axios.create({
@@ -58,20 +64,15 @@ export function AuthProvider({ children }) {
 
                 try {
                     const res = await publicAxios.post("/tokens/reissue");
-                    const newAccessToken = res.data.accessToken;
-
-                    // UI 갱신
-                    setAccessToken(newAccessToken); 
-
-                    // 요청 헤더 갱신
-                    tokenRef.current = newAccessToken; 
-                    originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                    const { accessToken } = res.data;
+                    setAccessToken(accessToken ?? null);
 
                     // 요청 재시도
+                    originalRequest.headers.Authorization = `Bearer ${accessToken}`;
                     return instance(originalRequest); 
 
                 } catch (refreshError) {
-                    logout();
+                    resetAuthContext();
                     return Promise.reject(refreshError);
                 }
             }
@@ -80,33 +81,20 @@ export function AuthProvider({ children }) {
         return instance;
     }, []);
 
-    const applyAuth = async (accessToken, userProfile) => {
-        tokenRef.current = accessToken; 
-        setAccessToken(accessToken ?? null);
-        setUser(userProfile ?? null);
-    };
-
-    const clearAuth = async () => {
-        tokenRef.current = null; 
-        setAccessToken(null);
-        setUser(null);
-    };
-
     // 페이지 새로고침 시 토큰 재발급
     useEffect(() => {
         async function init() {
             try {
                 const reissueRes = await publicAxios.post("/tokens/reissue");
-                const newAccessToken = reissueRes.data.accessToken;
-                setAccessToken(newAccessToken);
-                tokenRef.current = newAccessToken;
+                const { accessToken } = reissueRes.data;
+                setAccessToken(accessToken ?? null);
 
                 const profileRes = await privateAxios.get("/users/me");
                 const userProfile = profileRes.data;
                 setUser(userProfile ?? null);
 
             } catch (refreshError) {
-                clearAuth();
+                resetAuthContext();
                 
             } finally {
                 setInitialized(true);
@@ -122,8 +110,7 @@ export function AuthProvider({ children }) {
         user,
         publicAxios,
         privateAxios,
-        applyAuth,
-        clearAuth,
+        setAccessToken,
     };
 
     return (

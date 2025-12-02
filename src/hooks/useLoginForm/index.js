@@ -7,15 +7,15 @@ export function useLoginForm(navigate) {
     const email = useEmailField();
     const password = usePasswordField();
 
-    const { applyAuth } = useAuthContext();
+    const { setAccessToken } = useAuthContext();
     const { login } = useAuthApi();
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             const loginRes = await login(email.value, password.value);
-            const accessToken = loginRes.data.accessToken;
-            applyAuth(accessToken, null);
+            const { accessToken } = loginRes.data;
+            setAccessToken(accessToken ?? null);
             navigate("/boards/main");
 
         } catch(error) {
