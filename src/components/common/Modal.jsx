@@ -1,3 +1,5 @@
+import { createPortal } from "react-dom";
+
 export default function Modal({
   visible,
   title,
@@ -9,8 +11,11 @@ export default function Modal({
 }) {
   if (!visible) return null;
 
-  return (
-    <dialog open className="modal">
+  const portalRoot = document.getElementById("modal-root");
+  if (!portalRoot) return null;
+
+  return createPortal(
+    <div className="modal modal-open">
       <div className="modal-box">
         <h3 className="font-bold text-lg">{title}</h3>
         <div className="py-4">{children}</div>
@@ -23,9 +28,8 @@ export default function Modal({
         </div>
       </div>
 
-      <form method="dialog" className="modal-backdrop" onClick={onCancel}>
-        <button>close</button>
-      </form>
-    </dialog>
+      <div className="modal-backdrop" onClick={onCancel}></div>
+    </div>,
+    portalRoot
   );
 }
